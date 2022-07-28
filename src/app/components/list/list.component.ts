@@ -13,7 +13,9 @@ import { TodoState } from 'src/app/states/todo.states';
 export class ListComponent implements OnInit {
   @Select(TodoState.getTodoList) todos?: Observable<ITodo[]>
 
-  constructor(private store: Store) { }
+  constructor(
+    private store: Store
+  ) { }
 
   ngOnInit(): void {
     this.store.dispatch(new GetTodos());
