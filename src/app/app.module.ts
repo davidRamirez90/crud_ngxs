@@ -11,6 +11,7 @@ import { FormComponent } from './components/form/form.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TodoState } from './states/todo.states';
+import { AuthState } from './states/auth.state';
 
 @NgModule({
   declarations: [AppComponent, ListComponent, FormComponent],
@@ -20,7 +21,7 @@ import { TodoState } from './states/todo.states';
     HttpClientModule,
     ReactiveFormsModule,
     FormsModule,
-    NgxsModule.forRoot([TodoState]),
+    NgxsModule.forRoot([TodoState, AuthState]),
     NgxsReduxDevtoolsPluginModule.forRoot(),
     NgxsLoggerPluginModule.forRoot(),
   ],

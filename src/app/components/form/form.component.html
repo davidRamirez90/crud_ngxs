@@ -24,7 +24,7 @@
             <div class="form-group">
                 <button type="submit"
                         class="btn btn-primary mr-1"
-                        [disabled]="todoForm.pristine || todoForm.invalid">Submit
+                        [disabled]="todoForm.pristine || todoForm.invalid || !(formModel$ | async)?.userCanEdit">Submit
                 </button>
                 <button class="btn btn-primary" (click)="clearForm()">Clear</button>
             </div>

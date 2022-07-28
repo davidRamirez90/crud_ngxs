@@ -1,4 +1,5 @@
 import { State, Action, StateContext, Selector, Actions } from '@ngxs/store';
+import {patch, removeItem, updateItem} from '@ngxs/store/operators';
 import { ITodo } from '../models/ITodo';
 import {
   AddTodo,
@@ -13,7 +14,7 @@ import { Injectable } from '@angular/core';
 
 export class TodoStateModel {
     todos: ITodo[] = [];
-    selectedTodo! : ITodo ;
+    selectedTodo!: ITodo ;
 }
 
 @State<TodoStateModel>({
@@ -62,35 +63,47 @@ export class TodoState {
     @Action(UpdateTodo)
     updateTodo({getState, setState}:StateContext<TodoStateModel>, {payload,id}:UpdateTodo){
         return this.todoService.updateTodo(payload, id).pipe( tap( (result)=>{
-            const state = getState();
-            const todoList = [...state.todos];
-            const todoIndex = todoList.findIndex(item => item.id === id);
-            todoList[todoIndex] = result;
-            setState({
-                ...state,
-                todos: todoList,
-            })
+            // const state = getState();
+            // const todoList = [...state.todos];
+            // const todoIndex = todoList.findIndex(item => item.id === id);
+            // todoList[todoIndex] = result;
+            // setState({
+            //     ...state,
+            //     todos: todoList,
+            // })
+
+            // TODO: read documentation - https://www.ngxs.io/advanced/operators
+
+            setState(
+                patch({
+                    todos: updateItem<ITodo>(todo => todo?.id === id, payload)
+                })
+            )
         }))
     }
 
     @Action(DeleteTodo)
     deleteTodo({getState, setState}:StateContext<TodoStateModel>, {id}:DeleteTodo){
         return this.todoService.deleteTodo(id).pipe( tap( ()=>{
-            const state = getState();
-            const filteredArr = state.todos.filter(item => item.id !== id);
-            setState({
-                ...state,
-                todos: filteredArr,
-            })
+            // const state = getState();
+            // const filteredArr = state.todos.filter(item => item.id !== id);
+            // setState({
+            //     ...state,
+            //     todos: filteredArr,
+            // })
+
+            setState(
+                patch({
+                    todos: removeItem<ITodo>(todo => todo?.id === id)
+                })
+            )
         })) 
     }
 
     @Action(SetSelectedTodo)
-    setSelectedTodo({getState, setState}:StateContext<TodoStateModel>,{payload}: SetSelectedTodo) {
-        const state = getState();
-        setState({
-            ...state,
-            selectedTodo:payload
+    setSelectedTodo({patchState}:StateContext<TodoStateModel>,{payload}: SetSelectedTodo) {
+        patchState({
+            selectedTodo: payload
         })
     }
 
